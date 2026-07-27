@@ -14,25 +14,25 @@ fetch(`https://api.nasa.gov/planetary/apod?api_key=${API_KEY}`)
 
     return response.json();
   })
-  .then((data) => {
+  .then((data) => { 
     let media;
 
     if (data.media_type === "image") {
-      media = `
+      media = ` 
         <img
           src="${data.url}"
           alt="${data.title}"
         />
       `;
-    } else {
+    } else { 
       media = `
         <iframe
           src="${data.url}"
           title="${data.title}"
-          allowfullscreen
+          allowfullscreen 
         ></iframe>
       `;
-    }
+    } 
 
     app.innerHTML = `
       <main>
@@ -41,7 +41,7 @@ fetch(`https://api.nasa.gov/planetary/apod?api_key=${API_KEY}`)
         ${media}
 
         <p>${data.explanation}</p>
-      </main>
+      </main> 
     `;
   })
   .catch((error) => {
