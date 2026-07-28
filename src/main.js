@@ -9,7 +9,7 @@ app.innerHTML = `
   <main>
     <header class="site-header">
       <p class="eyebrow">NASA Astronomy Picture of the Day</p>
-      <h1>Explore the universe</h1>
+      <h1>Explore the universe</h1> 
 
       <form id="date-form">
         <label for="date">Choose a day</label>
@@ -18,11 +18,11 @@ app.innerHTML = `
           <input
             id="date"
             name="date"
-            type="date"
+            type="date" 
             min="1995-06-16"
             max="${today}"
             value="${today}"
-          />
+          /> 
 
           <button type="submit">View picture</button>
         </div>
@@ -32,18 +32,17 @@ app.innerHTML = `
     <section id="content" aria-live="polite">
       <p class="status">Loading...</p>
     </section>
-  </main>
+  </main>  
 `;
 
 const form = document.querySelector("#date-form");
 const dateInput = document.querySelector("#date");
 const content = document.querySelector("#content");
 
-function loadPicture(date)
-{
+function loadPicture(date) {
   content.innerHTML = `<p class="status">Loading...</p>`
 
-fetch(
+  fetch(
     `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&date=${date}`,
   )
     .then((response) => {
@@ -57,33 +56,93 @@ fetch(
       let media;
 
       if (data.media_type === "image") {
+        const hdButton = data.hdurl
+          ? '<button id="hd-button" class="hd-button" type="button">Load high resolution</button>'
+          : "";
+
         media = `
-          <img
-            src="${data.url}"
-            alt="${data.title}"
-          />
-        `;
+      <div class="image-wrapper">
+        <img
+          id="apod-image"
+          src="${data.url}"
+          data-hd-src="${data.hdurl || ""}"
+          alt="${data.title}"
+          loading="eager"
+          decoding="async"
+        />
+
+        ${hdButton}
+      </div>
+    `;
       } else {
         media = `
-          <iframe
-            src="${data.url}"
-            title="${data.title}"
-            allowfullscreen
-          ></iframe>
-        `;
+      <iframe
+        src="${data.url}"
+        title="${data.title}"
+        allowfullscreen
+      ></iframe>
+    `;
       }
 
       content.innerHTML = `
-        <article>
-          <p class="picture-date">${data.date}</p>
-          <h2>${data.title}</h2>
+    <article>
+      <p class="picture-date">${data.date}</p>
+      <h2>${data.title}</h2>
 
-          ${media}
+      ${media}
 
-          <p class="explanation">${data.explanation}</p>
-        </article>
-      `;
+      <p class="explanation">${data.explanation}</p>
+    </article>
+  `;
+
+      const image = document.querySelector("#apod-image");
+      const hdButton = document.querySelector("#hd-button");
+
+      function loadHighResolution() {
+        const hdUrl = image?.dataset.hdSrc;
+
+        if (!image || !hdUrl || image.src === hdUrl) {
+          return;
+        }
+
+        const highResolutionImage = new Image();
+
+        if (hdButton) {
+          hdButton.disabled = true;
+          hdButton.textContent = "Loading HD...";
+        }
+
+        highResolutionImage.onload = () => {
+          image.src = hdUrl;
+
+          if (hdButton) {
+            hdButton.textContent = "High resolution loaded";
+            hdButton.classList.add("loaded");
+          }
+        };
+
+        highResolutionImage.onerror = () => {
+          if (hdButton) {
+            hdButton.disabled = false;
+            hdButton.textContent = "Try loading HD again";
+          }
+        };
+
+        highResolutionImage.src = hdUrl;
+      }
+
+      hdButton?.addEventListener("click", loadHighResolution);
+
+      const connection =
+        navigator.connection ||
+        navigator.mozConnection ||
+        navigator.webkitConnection;
+
+      if (connection?.type === "wifi") {
+        loadHighResolution();
+      }
     })
+
     .catch((error) => {
       content.innerHTML = `
         <p class="status error">Error: ${error.message}</p>
