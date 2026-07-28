@@ -13,6 +13,11 @@ body {
   font-family: Arial, sans-serif;
 }
 
+button,
+inpur {
+  font: inherit;
+}
+
 #app {
   width: 100%;
   max-width: 900px;
@@ -23,12 +28,85 @@ main {
   text-align: center;
 }
 
+.site-header {
+  margin-bottom: 40px;
+}
+
+.eyebrow {
+  margin-bottom: 10px;
+  color: #b7a8ca;
+}
+
 h1 {
   margin: 0 0 30px;
 
   color: #38f5ff;
   font-size: clamp(2rem, 6vw, 4rem);
   line-height: 1.1;
+}
+
+form {
+  display: inline-block;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.date-controls {
+  display: flex;
+  gap: 10px;
+}
+
+input,
+button {
+  min-height: 44px;
+  border: 1px solid #66517e;
+  border-radius: 8px;
+}
+
+input {
+  padding: 8px 18px;
+
+  background: #080111;
+  color: white;
+  color-scheme: dark;
+}
+
+button {
+  padding: 8px 18px;
+
+  border-color: #38f5ff;
+  background: #38f5ff;
+  color: #7438ff;
+
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #8af9ff;
+}
+
+h2 {
+  margin: 0 0 30px;
+
+  color: #38f5ff;
+  font-size: clamp(1.7rem, 4vw, 2.7rem);
+  line-height: 1.2;
+}
+
+.picture-date {
+  margin-bottom: 8px;
+
+  color: #b7a8ca;
+
+  font-size: 0.9rem;
+  text-align: center;
 }
 
 img,
@@ -44,10 +122,32 @@ iframe {
 
   object-fit: contain;
   background: #080111;
+  box-shadow: 0 16px 45px rgb(0 0 0 / 25%);
 }
 
 iframe {
   aspect-ratio: 16 / 9;
+}
+
+.explanation {
+  max-width: 750px;
+  margin: 0 auto;
+
+  color: #eee8f5;
+
+  font-size: 1rem;
+  line-height: 1.7;
+  text-align: left;
+}
+
+.status {
+  max-width: 750px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.error {
+  color: #ff9da8;
 }
 
 p {
@@ -72,7 +172,16 @@ p {
     font-size: 2rem;
   }
 
-  p {
+  .date-controls {
+    flex-direction: column;
+  }
+
+  input,
+  button {
+    width: 100%;
+  }
+
+  .explanation {
     font-size: 0.95rem;
   }
 }
